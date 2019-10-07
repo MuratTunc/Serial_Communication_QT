@@ -103,7 +103,7 @@ void MainWindow::serialReceived()
 {
     serial->flush();
     QByteArray Bytes_Array = serial->readAll();
-    while( serial->waitForReadyRead(100))
+    while( serial->waitForReadyRead(1000))
         Bytes_Array=serial->readAll();
 
 

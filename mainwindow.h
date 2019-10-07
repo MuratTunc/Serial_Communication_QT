@@ -18,7 +18,6 @@ public:
     const QByteArray Pattern_Green2 = QByteArray("\xE0\x05\x31\x05\xE4",5);
     const QByteArray Get_SW_VERSION = QByteArray("\xE0\x04\x36\xE5",4);
     const QByteArray Start_SESSION = QByteArray("\xE0\x04\x01\x1A",4);
-    const QByteArray Start_SESSION = QByteArray("\xE0\x04\x01\x1A",4);
     bool Open_Connection = false;
 
 
