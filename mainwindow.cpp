@@ -6,8 +6,9 @@
 #include <QDebug>
 #include <QThread>
 #include <QtCore/QtGlobal>
-
-
+#include <QString>
+#include <QTextCodec>
+#include <QPlainTextEdit>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -17,11 +18,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     serial = new QSerialPort(this);
-    //OPEN AND INITIALIZE COMPORT
     this->OpenComPort();
-    this->Write_Data_COMPORT(Pattern_Green);
-    //this->serialReceived();
-
+    this->Write_Data_COMPORT(Get_SW_VERSION);
 
 }
 
@@ -80,60 +78,27 @@ void MainWindow::Write_Data_COMPORT(const QByteArray &data)
     }
 }
 
-void MainWindow::Received_From_COMPORT(){
-
-
-
-    QByteArray Read_Data_Array;
-    QString s_data;
-    Read_Data_Array=serial->readAll();
-    qDebug()<<"Data Received:"<<Read_Data_Array;
-
-    s_data=Read_Data_Array.toHex();
-    s_data=s_data.toUpper();
-
-    //s_data = QString::fromStdString(Read_Data_Array.toStdString());
-
-    ui->label->setText(s_data);
-
-}
-
 
 void MainWindow::serialReceived()
 {
     serial->flush();
-    QByteArray Bytes_Array = serial->readAll();
-    while( serial->waitForReadyRead(1000))
-        Bytes_Array=serial->readAll();
+    Bytes_Received= serial->readAll();
+    while( serial->waitForReadyRead(100))
+         Bytes_Received=serial->readAll();
 
 
 
-    ui->label->setText(Bytes_Array.toHex().toUpper());
-    qDebug() << "3-Received Response is: " << Bytes_Array;
+    Data_Received_HEX=Bytes_Received.toHex();
+    Data_Received_HEX=Data_Received_HEX.toUpper();
 
+    QTextCodec *codec = QTextCodec::codecForName("KOI8-R");
+    Data_Received_STRING = codec->toUnicode(Bytes_Received);
 
-    /*
-    qDebug()<<"Bytes At Port"<<serial->bytesAvailable();
-    serial->waitForReadyRead(1000);
+    ui->label->setText(Data_Received_HEX);
+    qDebug() << "3-Received Response is: " << Bytes_Received;
 
-    qDebug()<<"Bytes At Port"<<serial->bytesAvailable();
-    serial->waitForReadyRead(1000);
-
-    qDebug()<<"Bytes At Port"<<serial->bytesAvailable();
-    serial->waitForReadyRead(1000);
-
-
-
-
-    QByteArray ba;
-    serial->waitForReadyRead(4000);
-    //while (serial->bytesAvailable()<10 ){    //canReadLine()
-        //qDebug() << "canReadLine loop ";
-        ba = serial->readAll();
-    //}
-    ui->label->setText(ba.toHex());
-    qDebug() << "Received Response is: " << ba;
-    */
+    ui->plainTextEdit_HEX_FORMAT->appendPlainText(Data_Received_HEX);
+    ui->plainTextEdit_STRING_FORMAT->appendPlainText(Data_Received_STRING);
 
 }
 
