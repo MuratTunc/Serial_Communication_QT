@@ -22,8 +22,8 @@ public:
     bool Open_Connection = false;
     bool IsTvAlive = false;
     QByteArray Bytes_Received;
-    QString Data_Received_HEX;
-    QString Data_Received_STRING;
+    QString Data_Received_HEX =" ";
+    QString Data_Received_STRING=" ";
 
     ~MainWindow();
 

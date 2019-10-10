@@ -17,9 +17,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+
     serial = new QSerialPort(this);
+
     this->OpenComPort();
+
     this->Write_Data_COMPORT(Get_SW_VERSION);
+    this->Write_Data_COMPORT(Start_SESSION);
+    this->Write_Data_COMPORT(Pattern_Green);
+
 
 }
 
@@ -27,6 +33,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     serial->close();
+    delete serial;
 }
 
 //OPEN COMPORT
@@ -55,11 +62,13 @@ void MainWindow::OpenComPort()
     }
 
     //CONNECT**********************************************************************
-    connect(serial, SIGNAL(readyRead()), this, SLOT(serialReceived()));
-    serial->clear();
-    serial->flush();
+
+    connect(serial, SIGNAL(readyRead()) , this, SLOT(serialReceived()) );
+
     Open_Connection=true;
+    this->Bytes_Received.clear();
     //qDebug("1-OPEN COMPORT OK");
+    return;
 
 }
 
@@ -69,27 +78,38 @@ void MainWindow::Write_Data_COMPORT(const QByteArray &data)
     if (Open_Connection)
     {
         serial->write(data);
-        //qDebug("2-DATA SENT TO COMPORT");
+        while(serial->waitForBytesWritten(10));
     }
     else
     {
         qDebug() << "SERIAL PORT - NOT OPENED" << "error code = " << serial->error();
         qDebug() << "ERROR INFO: = " << serial->errorString();
     }
+    return;
 }
 
 
 void MainWindow::serialReceived()
 {
     serial->flush();
+    //qDebug() << "bytesAvailable: = " << size;
+    //qDebug() << "isReadable(): = " << serial->isReadable();
+
+    if(serial->bytesAvailable()){
+        Bytes_Received.append(serial->readAll());
+        ui->plainTextEdit_HEX_FORMAT-> appendPlainText( (Bytes_Received.toHex() ).toUpper() );
+    }
+    //qDebug() << "TOTAL BYTES= " << ((Bytes_Received.toHex() ).toUpper());
+
+    /*
+    forever {
     Bytes_Received= serial->readAll();
-    while( serial->waitForReadyRead(100))
-         Bytes_Received=serial->readAll();
+    if (serial->bytesAvailable() == 0 && !serial->waitForReadyRead(5))
+        break;
+    }
 
 
-
-    Data_Received_HEX=Bytes_Received.toHex();
-    Data_Received_HEX=Data_Received_HEX.toUpper();
+    Data_Received_HEX=(Bytes_Received.toHex()).toUpper();
 
     QTextCodec *codec = QTextCodec::codecForName("KOI8-R");
     Data_Received_STRING = codec->toUnicode(Bytes_Received);
@@ -100,5 +120,6 @@ void MainWindow::serialReceived()
     ui->plainTextEdit_HEX_FORMAT->appendPlainText(Data_Received_HEX);
     ui->plainTextEdit_STRING_FORMAT->appendPlainText(Data_Received_STRING);
 
+    */
+    return;
 }
-
