@@ -24,6 +24,7 @@ public:
     QByteArray Bytes_Received;
     QString Data_Received_HEX =" ";
     QString Data_Received_STRING=" ";
+    void Boot_Up_StartSession();
 
     ~MainWindow();
 

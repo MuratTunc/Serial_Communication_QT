@@ -21,10 +21,14 @@ MainWindow::MainWindow(QWidget *parent) :
     serial = new QSerialPort(this);
 
     this->OpenComPort();
-
+    /*
     this->Write_Data_COMPORT(Get_SW_VERSION);
     this->Write_Data_COMPORT(Start_SESSION);
     this->Write_Data_COMPORT(Pattern_Green);
+    */
+
+    //this->Write_Data_COMPORT(Start_SESSION);
+    this->Boot_Up_StartSession();
 
 
 }
@@ -56,6 +60,8 @@ void MainWindow::OpenComPort()
 
     if (!serial->open(QIODevice::ReadWrite)) {
         qDebug() << "Error Failed to open serial port!!!";
+        qDebug() << "SERIAL PORT - NOT OPENED" << "error code = " << serial->error();
+        qDebug() << "ERROR INFO: = " << serial->errorString();
         delete serial;
         serial = NULL;
         return;
@@ -67,59 +73,43 @@ void MainWindow::OpenComPort()
 
     Open_Connection=true;
     this->Bytes_Received.clear();
-    //qDebug("1-OPEN COMPORT OK");
-    return;
 
 }
 
 
 void MainWindow::Write_Data_COMPORT(const QByteArray &data)
 {
-    if (Open_Connection)
-    {
-        serial->write(data);
-        while(serial->waitForBytesWritten(10));
-    }
-    else
-    {
-        qDebug() << "SERIAL PORT - NOT OPENED" << "error code = " << serial->error();
-        qDebug() << "ERROR INFO: = " << serial->errorString();
-    }
-    return;
+    this->Bytes_Received.clear();
+    serial->write(data);
+    while(serial->waitForBytesWritten(10));
+
+
 }
 
 
 void MainWindow::serialReceived()
 {
     serial->flush();
-    //qDebug() << "bytesAvailable: = " << size;
-    //qDebug() << "isReadable(): = " << serial->isReadable();
-
-    if(serial->bytesAvailable()){
-        Bytes_Received.append(serial->readAll());
-        ui->plainTextEdit_HEX_FORMAT-> appendPlainText( (Bytes_Received.toHex() ).toUpper() );
-    }
-    //qDebug() << "TOTAL BYTES= " << ((Bytes_Received.toHex() ).toUpper());
-
-    /*
-    forever {
-    Bytes_Received= serial->readAll();
-    if (serial->bytesAvailable() == 0 && !serial->waitForReadyRead(5))
-        break;
+    if(serial->bytesAvailable()==17){
+        Bytes_Received.append(serial->readAll() );
+        ui->plainTextEdit_HEX_FORMAT-> appendPlainText(  (Bytes_Received.toHex() ).toUpper() );
+        //ui->plainTextEdit_STRING_FORMAT->appendPlainText( codec->toUnicode(Bytes_Received)   );
+        qDebug() << "Bytes_Received: = " << Bytes_Received;
+        qDebug() << "*****************";
     }
 
+}
 
-    Data_Received_HEX=(Bytes_Received.toHex()).toUpper();
+void MainWindow::Boot_Up_StartSession(){
 
-    QTextCodec *codec = QTextCodec::codecForName("KOI8-R");
-    Data_Received_STRING = codec->toUnicode(Bytes_Received);
+    while(!IsTvAlive){
+        this->Write_Data_COMPORT(Get_SW_VERSION);
 
-    ui->label->setText(Data_Received_HEX);
-    qDebug() << "3-Received Response is: " << Bytes_Received;
+        if( Bytes_Received == "xE0\x04\x00\x1B"){
+            IsTvAlive = true;
+            ui->plainTextEdit_STRING_FORMAT->appendPlainText("TV IS ALIVE...");
+        }
+        QThread::msleep(10);
+    }
 
-    ui->plainTextEdit_HEX_FORMAT->appendPlainText(Data_Received_HEX);
-    ui->plainTextEdit_STRING_FORMAT->appendPlainText(Data_Received_STRING);
-
-    */
-    return;
 }
