@@ -56,3 +56,5 @@ Normally Qt version and Debugger will be automatically set, but you can also set
 Then go to Kits (Still inside the Build and Run) and check whether Compiler, Debugger and Qt version are set
 
 [https://www.raspberrypi.org/forums/viewtopic.php?t=69163]
+
+Murat Tunç
