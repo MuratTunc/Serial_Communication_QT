@@ -1,5 +1,6 @@
-# Serial_Communication_QT
+# Serial_Communication_QT_C++
 Serial Communication in QT IDE
+
 
 1-BURN RASP4 image to SD CARD on Lİnux Platform
 https://raspberrypi.stackexchange.com/questions/931/how-do-i-install-an-os-image-onto-an-sd-card
@@ -56,5 +57,3 @@ Normally Qt version and Debugger will be automatically set, but you can also set
 Then go to Kits (Still inside the Build and Run) and check whether Compiler, Debugger and Qt version are set
 
 [https://www.raspberrypi.org/forums/viewtopic.php?t=69163]
-
-Murat Tunç
