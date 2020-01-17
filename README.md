@@ -57,3 +57,37 @@ Normally Qt version and Debugger will be automatically set, but you can also set
 Then go to Kits (Still inside the Build and Run) and check whether Compiler, Debugger and Qt version are set
 
 [https://www.raspberrypi.org/forums/viewtopic.php?t=69163]
+
+
+AMAZON WEB SERVICES
+Test Box projenizde yaptığınız çalışmaları saklamanız için AWS (Amazon Web Service ) de
+"CodeCommit" reposu açtık  .
+
+Bu repoya "git" üzerinden erişebilirsiniz. Aşağıda nasıl erişebileceğinizi kısaca yazdım . Eğer bir problem yaşarsanız benimle kontağa geçin.
+
+AWS  kullanıcı adınızı ve şifreleriniz ayrıca göndereceğim.
+
+İyi çalışmalar
+
+1 - AWS ye girmek için aşağıdaki web sayfasını kullanın
+https://714169176372.signin.aws.amazon.com/console
+
+Kullanıcı adınızı ve şifrenizi girin.
+
+2- Gelen Sayfada ( AWS Management Console ) bir sürü AWS servisi var . Siz "CodeCommit" i seçin
+
+3- Repositories linkine basınca hesaptaki repoları göreceksiniz , siz TEST_BOX reposunu seçin.
+
+4-Böylece reponuzdaki dosyaları dizinleri ,commitleri görebilirsiniz (şu an pek bir şey yok)
+
+Git ile repoyu bilgisayarınıza çekmek için  ve değişikliklerinizi atmanız için bir git accountu yaratmanız gerekiyor .Aşağıdaki linkteki
+"To set up HTTPS Git credentials for CodeCommit" bölümündeki adımları izleyerek bu işlemi yapabilirsiniz.
+
+https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-gc.html?icmpid=docs_acc_console_connect_np
+
+
+Eğer ssh ile bu işlemi yapmak isterseniz ilgili dökümanlar :
+https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-ssh-unixes.html  (LINUX)
+
+https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-ssh-windows.html (WINDOWS)
+
